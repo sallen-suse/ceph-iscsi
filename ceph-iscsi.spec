@@ -55,7 +55,7 @@ Requires:       python3-rbd >= 10.2.2
 Requires:       python3-netifaces >= 0.10.4
 Requires:       python3-rtslib >= 2.1.fb67
 Requires:       python3-rpm >= 4.11
-Requires:       python3-pycrypto >= 2.6
+Requires:       python3-cryptography
 Requires:       python3-Flask >= 0.10.1
 BuildRequires:  python-rpm-macros
 BuildRequires:  fdupes
