@@ -561,7 +561,8 @@ class Disks(UIGroup):
 class Disk(UINode):
 
     display_attributes = ["image", "ceph_cluster", "pool", "wwn", "size_h",
-                          "feature_list", "snapshots", "owner", "backstore", "control_values"]
+                          "feature_list", "snapshots", "owner", "backstore",
+                          "backstore_object_name", "control_values"]
 
     def __init__(self, parent, image_id, image_config, size=None,
                  features=None, snapshots=None):
@@ -584,6 +585,7 @@ class Disk(UINode):
         self.feature_list = []
         self.snapshots = []
         self.backstore = image_config['backstore']
+        self.backstore_object_name = image_config['backstore_object_name']
         self.controls = {}
         self.control_values = {}
         self.ceph_cluster = self.parent.parent.ceph.cluster.name

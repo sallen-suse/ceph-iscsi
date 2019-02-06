@@ -51,7 +51,7 @@ class Config(object):
                    "targets": {},
                    "discovery_auth": {'chap': '',
                                       'chap_mutual': ''},
-                   "version": 6,
+                   "version": 7,
                    "epoch": 0,
                    "created": '',
                    "updated": ''
@@ -222,6 +222,12 @@ class Config(object):
                 target['acl_enabled'] = True
                 self.update_item("targets", target_iqn, target)
             self.update_item("version", None, 6)
+
+        if self.config['version'] == 6:
+            for disk_id, disk in self.config['disks'].items():
+                disk['backstore_object_name'] = disk_id
+                self.update_item("disks", disk_id, disk)
+            self.update_item("version", None, 7)
 
         self.commit("retain")
 
