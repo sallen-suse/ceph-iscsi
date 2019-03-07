@@ -266,10 +266,7 @@ class Disks(UIGroup):
 
         # first check that the intended pool is compatible with rbd images
         root = self.get_ui_root()
-        clusters = root.ceph.cluster_map
-        local_cluster = [clusters[cluster_name] for cluster_name in clusters
-                         if clusters[cluster_name]['local']][0]['object']
-        pools = local_cluster.pools
+        pools = root.ceph.cluster.pools
         pool_object = pools.pool_lookup.get(pool, None)
         if pool_object:
             if pool_object.type == 'replicated':
@@ -349,7 +346,7 @@ class Disks(UIGroup):
                     raise GatewayAPIError("Unable to retrieve disk details "
                                           "for '{}' from the API".format(disk_key))
 
-            ceph_pools = self.parent.ceph.local_ceph.pools
+            ceph_pools = self.parent.ceph.cluster.pools
             ceph_pools.refresh()
 
         else:
@@ -517,7 +514,7 @@ class Disks(UIGroup):
                                                            self.logger)))
             return
 
-        ceph_pools = self.parent.ceph.local_ceph.pools
+        ceph_pools = self.parent.ceph.cluster.pools
         ceph_pools.refresh()
 
         self.logger.info('ok')
@@ -534,7 +531,7 @@ class Disks(UIGroup):
         ui_root = self.get_ui_root()
         state = True
         discovered_pools = [rados_pool.name for rados_pool in
-                            ui_root.ceph.local_ceph.pools.children]
+                            ui_root.ceph.cluster.pools.children]
         existing_rbds = self.disk_info.keys()
 
         storage_key = "{}.{}".format(pool, image)
@@ -589,7 +586,7 @@ class Disk(UINode):
         self.backstore = image_config['backstore']
         self.controls = {}
         self.control_values = {}
-        self.ceph_cluster = self.parent.parent.ceph.local_ceph.name
+        self.ceph_cluster = self.parent.parent.ceph.cluster.name
 
         disk_map = self.parent.disk_info
         if image_id not in disk_map:
@@ -873,7 +870,7 @@ class Disk(UINode):
         """
         root = self.parent.parent
         ceph_group = root.ceph
-        cluster = ceph_group.local_ceph
+        cluster = ceph_group.cluster
         pool = cluster.pools.pool_lookup.get(self.pool)
 
         if pool:
