@@ -115,7 +115,8 @@ class Settings(object):
                 "prometheus_exporter": "true",
                 "prometheus_port": 9287,
                 "prometheus_host": "::",
-                "logger_level": logging.DEBUG
+                "logger_level": logging.DEBUG,
+                "fqdn_enabled": "false"
                 }
 
     target_defaults = {"osd_op_timeout": 30,
