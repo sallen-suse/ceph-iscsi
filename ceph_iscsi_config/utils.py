@@ -283,7 +283,7 @@ def this_host():
     return the local machine's fqdn or shortname
     """
     fqdn_enabled = settings.config.fqdn_enabled
-    return socket.gethostname() if fqdn_enabled else socket.gethostname().split('.')[0]
+    return socket.getfqdn() if fqdn_enabled else socket.gethostname().split('.')[0]
 
 
 def gen_file_hash(filename, hash_type='sha256'):
