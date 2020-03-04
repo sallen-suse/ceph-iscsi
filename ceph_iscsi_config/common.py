@@ -641,6 +641,27 @@ class Config(object):
     def commit(self, post_action='close'):
         self._commit_rbd(post_action)
 
+    def normalise_controls(self):
+        for section in ('targets', 'disks'):
+            for item in self.config.get(section, {}).keys():
+                item_changed = False
+                if 'controls' not in self.config[section].get(item, {}):
+                    continue
+                for c_key, c_value in self.config[section][item]['controls'].items():
+                    if isinstance(c_value, str):
+                        if c_value.isdigit():
+                            self.config[section][item]['controls'][c_key] = int(c_value)
+                            item_changed = True
+                    # while we're here fix bug bsc#1163617
+                    if c_key == "unmap_zeroes_data" and \
+                            self.config[section][item]['controls'][c_key] > 1:
+                        self.config[section][item]['controls'][c_key] = 1
+                        item_changed = True
+                if item_changed:
+                    self.set_item(section, item, self.config[section][item])
+        if self.changed:
+            self.commit('retain')
+
 
 def main():
     pass

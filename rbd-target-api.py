@@ -2844,6 +2844,9 @@ def main():
     log.addHandler(file_handler)
     log.addHandler(syslog_handler)
 
+    # normalise controls in case upgrade has left some ints as strings
+    config.normalise_controls()
+
     ceph_gw = CephiSCSIGateway(logger, config)
 
     osd_state_ok = ceph_gw.osd_blacklist_cleanup()
